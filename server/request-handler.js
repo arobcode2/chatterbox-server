@@ -43,7 +43,6 @@ var requestHandler = function(request, response) {
   };
   var headers = defaultCorsHeaders;
   
-  console.log("***************", request.method, request.url);
   if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
     request.on('data', (chunk) => {
@@ -65,7 +64,6 @@ var requestHandler = function(request, response) {
     response.writeHead(200, headers);
     response.end();
   } else {
-    console.log('SSSSSSSSSSSSSSSSSSSSssss',request.url);
     response.writeHead(404, headers);
     response.end('Nope! Try again');
   }
