@@ -13,6 +13,7 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 
 var messages = [];
+var id = 1;
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -30,10 +31,8 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  console.log(request);
   // The outgoing status.
   var statusCode = 200;
-
   // See the note below about CORS headers.
   var defaultCorsHeaders = {
     'access-control-allow-origin': '*',
@@ -44,6 +43,7 @@ var requestHandler = function(request, response) {
   };
   var headers = defaultCorsHeaders;
   
+  console.log("***************", request.method, request.url);
   if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
     request.on('data', (chunk) => {
@@ -51,19 +51,21 @@ var requestHandler = function(request, response) {
     }).on('end', () => {
       body = Buffer.concat(body).toString();
       var message = JSON.parse(body);
+      message.objectId = id++;
       messages.push(message);
       response.writeHead(201, headers);
       response.end('yay!');
     });
-  }
-  
-  if (request.method === 'GET' && request.url === '/classes/messages') {
+  } else if (request.method === 'GET' && request.url === '/classes/messages') {
     var obj = {};
     obj.results = messages;
     response.writeHead(200, headers);
     response.end(JSON.stringify(obj));
-  }
-  if (request.method === 'GET' || request.method === 'POST' && request.url !== '/classes/messages') {
+  } else if (request.method === 'OPTIONS') {
+    response.writeHead(200, headers);
+    response.end();
+  } else {
+    console.log('SSSSSSSSSSSSSSSSSSSSssss',request.url);
     response.writeHead(404, headers);
     response.end('Nope! Try again');
   }
