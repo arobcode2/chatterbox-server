@@ -12,6 +12,8 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 
+var messages = [];
+
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -41,7 +43,6 @@ var requestHandler = function(request, response) {
     'Content-Type': 'application/json'
   };
   var headers = defaultCorsHeaders;
-  var messages = [];
   
   if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
@@ -49,17 +50,16 @@ var requestHandler = function(request, response) {
       body.push(chunk);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
-      // console.log("**************************************",body);
       var message = JSON.parse(body);
       messages.push(message);
       response.writeHead(201, headers);
       response.end('yay!');
     });
   }
+  
   if (request.method === 'GET' && request.url === '/classes/messages') {
     var obj = {};
     obj.results = messages;
-    console.log("*******************************", obj.results);
     response.writeHead(200, headers);
     response.end(JSON.stringify(obj));
   }
