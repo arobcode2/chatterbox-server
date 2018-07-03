@@ -41,33 +41,27 @@ var requestHandler = function(request, response) {
     'Content-Type': 'application/json'
   };
   var headers = defaultCorsHeaders;
+  var messages = [];
   
-  if (request.method === 'POST' && request.path === '/classes/messages') {
+  if (request.method === 'POST' && request.url === '/classes/messages') {
     let body = [];
     request.on('data', (chunk) => {
       body.push(chunk);
     }).on('end', () => {
       body = Buffer.concat(body).toString();
+      // console.log("**************************************",body);
+      var message = JSON.parse(body);
+      messages.push(message);
+      response.writeHead(201, headers);
+      response.end('yay!');
     });
-    response.writeHead(201, headers);
-    response.json('yay!');
   }
-  if (request.method === 'GET' && request.path === '/classes/messages') {
-    var body = '';
-    request.setEncoding('utf8');
-    
-    response.on('data', (chunk) => {
-      body += chunk;
-    }).on('end', () => {
-      try {
-        const data = JSON.parse(body);
-        response.write(typeof data);
-        response.end('hi');
-      } catch (err) {
-        response._responseCode = 400;
-        return response.end(`error: ${err.message}`);
-      }
-    });
+  if (request.method === 'GET' && request.url === '/classes/messages') {
+    var obj = {};
+    obj.results = messages;
+    console.log("*******************************", obj);
+    response.writeHead(200, headers);
+    response.end(JSON.stringify(obj));
   }
 
   // Tell the client we are sending them plain text.
