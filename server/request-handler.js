@@ -59,9 +59,13 @@ var requestHandler = function(request, response) {
   if (request.method === 'GET' && request.url === '/classes/messages') {
     var obj = {};
     obj.results = messages;
-    console.log("*******************************", obj);
+    console.log("*******************************", obj.results);
     response.writeHead(200, headers);
     response.end(JSON.stringify(obj));
+  }
+  if (request.method === 'GET' || request.method === 'POST' && request.url !== '/classes/messages') {
+    response.writeHead(404, headers);
+    response.end('Nope! Try again');
   }
 
   // Tell the client we are sending them plain text.
