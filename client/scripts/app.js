@@ -4,7 +4,7 @@
 class App {
 
   constructor() {
-    this.server = 'http://parse.atx.hackreactor.com/chatterbox/classes/messages';
+    this.server = 'http://127.0.0.1:3000/';
     App.pointer = this;
     App.rooms = {};
   }
@@ -26,23 +26,23 @@ class App {
     // };
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: 'http://parse.atx.hackreactor.com/chatterbox/classes/messages',
-    type: 'POST',
-    data: JSON.stringify(message),
-    contentType: 'application/json',
-    success: function (data) {
-      console.log('chatterbox: Message sent');
-    },
-    error: function (data) {
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message', data);
-    }
+      url: 'http://127.0.0.1:3000/',
+      type: 'POST',
+      data: JSON.stringify(message),
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('chatterbox: Message sent');
+      },
+      error: function (data) {
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        console.error('chatterbox: Failed to send message', data);
+      }
     });
   }
 
   fetch() {
     $.ajax({
-      url: 'http://parse.atx.hackreactor.com/chatterbox/classes/messages',
+      url: 'http://127.0.0.1:3000/',
       type: 'GET',
       data: {order: '-createdAt'},
       success: function (data) {
@@ -76,7 +76,7 @@ class App {
   renderRoom(roomname) {
     let filterRoomname;
     for (let key in App.rooms) {
-       filterRoomname = _.escape(key);
+      filterRoomname = _.escape(key);
       $('.roomsDrop').append(`<option> ${filterRoomname} </option>`);
     }
   }
@@ -100,7 +100,7 @@ class App {
   // buildMessage() {
   //   App.pointer.send(message);
   // }
-};
+}
 
 const app = new App();
 app.init();
